@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: sbs-mysql
+    container_name: sbs-mysql-fresh-latest
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -9,19 +9,18 @@ services:
       MYSQL_USER: testuser
       MYSQL_PASSWORD: testpass
     ports:
-      - "3306:3306"
+      - "3308:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-data-fresh:/var/lib/mysql
 
-  test-api:
-    image: eclipse-temurin:21-jdk
-    container_name: sbs-java-api
+  test-api:   # ✅ NOW INSIDE services
+    image: otsi/sbs-java-api-new-fresh-latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sbs-java-api-fresh-latest
     ports:
-      - "8085:8085"
-    volumes:
-      - ./app.jar:/app/app.jar
-    working_dir: /app
-    command: ["java", "-jar", "app.jar"]
+      - "8087:8085"
     depends_on:
       - mysql
     environment:
@@ -30,4 +29,4 @@ services:
       SPRING_DATASOURCE_PASSWORD: testpass
 
 volumes:
-  mysql-data:
+  mysql-data-fresh-latest:
